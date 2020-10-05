@@ -72,13 +72,15 @@ function authenticate(user, password, cb) {
     let isAuthenticated = false;
     let hashedPassword = hash(password);
     user.index = user.index - 1;
+    // TODO get from config
+    let maxHashingTries = 10;
 
     // user.index >= 0 because hashing the password 0 times is still a legit login.
-    while (!isAuthenticated && user.index >= 0) {
+    while (!isAuthenticated && maxHashingTries > 0) {
         if (hashedPassword === user.password) {
             isAuthenticated = true;
         } else {
-            user.index = user.index - 1;
+            maxHashingTries = maxHashingTries - 1;
             hashedPassword = hash(hashedPassword);
         }
     }

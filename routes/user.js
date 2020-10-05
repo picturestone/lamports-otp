@@ -25,4 +25,33 @@ router.post('/', function (req, res, next) {
     }
 });
 
+router.put('/', function (req, res, next) {
+    if (!req.session.loggedin) {
+        res.statusMessage = 'Not logged in';
+        res.sendStatus(401);
+    } else {
+        password = req.body.password;
+
+        if (!password) {
+            res.statusMessage = 'Password missing';
+            res.sendStatus(400);
+        } else {
+            userdao.getByUsername(req.session.username, (foundUser) => {
+                if (foundUser) {
+                    foundUser.password = password;
+                    // TODO get index from config
+                    foundUser.index = 10;
+                    userdao.updateByUsername(foundUser.username, foundUser, () => {
+                        res.statusMessage = 'Password changed';
+                        res.sendStatus(200);
+                    });
+                } else {
+                    res.statusMessage = 'User in session not found. Try logging in again.';
+                    res.sendStatus(404);
+                }
+            });
+        }
+    }
+});
+
 module.exports = router;
