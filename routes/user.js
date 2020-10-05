@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const user = require('../models/user');
 const userdao = require('../database/userdao');
+let config = require('../models/configuration');
+config = new config();
 
 router.post('/', function (req, res, next) {
     username = req.body.username;
@@ -16,8 +18,7 @@ router.post('/', function (req, res, next) {
                 res.statusMessage = 'User with this username already exists';
                 res.sendStatus(400);
             } else {
-                // TODO get default index from config
-                userdao.insert(new user(username, password, 10), () => {
+                userdao.insert(new user(username, password, config.index), () => {
                     res.sendStatus(201);
                 });
             }
@@ -39,8 +40,7 @@ router.put('/', function (req, res, next) {
             userdao.getByUsername(req.session.username, (foundUser) => {
                 if (foundUser) {
                     foundUser.password = password;
-                    // TODO get index from config
-                    foundUser.index = 10;
+                    foundUser.index = config.index;
                     userdao.updateByUsername(foundUser.username, foundUser, () => {
                         res.statusMessage = 'Password changed';
                         res.sendStatus(200);
