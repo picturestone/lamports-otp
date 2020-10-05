@@ -39,6 +39,9 @@ router.post('/login', function (req, res, next) {
             if (user) {
                 authenticate(user, password, (isAuthenticated) => {
                     if (isAuthenticated) {
+                        req.session.loggedin = true;
+                        req.session.username = user.username;
+                        req.session.save();
                         res.sendStatus(200);
                     } else {
                         res.statusMessage = 'Wrong username or password';
@@ -50,6 +53,18 @@ router.post('/login', function (req, res, next) {
                 res.sendStatus(401);
             }
         });
+    }
+});
+
+router.get('/logout', function(req, res, next) {
+    if(!req.session.loggedin) {
+        res.statusMessage = 'Not logged in';
+        res.sendStatus(401);
+    } else {
+        req.session.loggedin = undefined;
+        req.session.username = undefined;
+        req.session.save();
+        res.sendStatus(200);
     }
 });
 
