@@ -2,6 +2,7 @@
 
 #### Unreleased
 
+- Added configuration via .env file #6
 - Added change password functionality #5
 - Added logout route #4
 - Added login and register routes #2, #3

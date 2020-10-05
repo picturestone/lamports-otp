@@ -2,6 +2,8 @@ const express = require('express');
 const crypto = require('crypto');
 const router = express.Router();
 const userdao = require('../database/userdao');
+let config = require('../models/configuration');
+config = new config();
 
 router.post('/index', function (req, res, next) {
     username = req.body.username;
@@ -23,8 +25,7 @@ router.post('/index', function (req, res, next) {
 });
 
 router.get('/index', function (req, res, next) {
-    // TODO get from configuration
-    res.send({ index: 10 });
+    res.send({ index: config.index });
 });
 
 router.post('/login', function (req, res, next) {
@@ -72,8 +73,7 @@ function authenticate(user, password, cb) {
     let isAuthenticated = false;
     let hashedPassword = hash(password);
     user.index = user.index - 1;
-    // TODO get from config
-    let maxHashingTries = 10;
+    let maxHashingTries = config.index;
 
     // user.index >= 0 because hashing the password 0 times is still a legit login.
     while (!isAuthenticated && maxHashingTries > 0) {

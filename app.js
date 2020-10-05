@@ -1,15 +1,15 @@
 const express = require('express');
 const session = require('express-session');
 var cookieParser = require('cookie-parser');
-
+let config = require('./models/configuration');
+config = new config();
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
 
 const app = express();
 app.use(cookieParser());
-// TODO put secret in config
 app.use(session({
-    secret: 'otp-secret',
+    secret: config.sessionSecret,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -36,7 +36,8 @@ app.use(function (req, res, next) {
     res.sendStatus(404);
 });
 
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+const port = config.port;
+const host = config.host;
+app.listen(port, host, () => {
+    console.log(`Example app listening at http://${host}:${port}`);
 })
