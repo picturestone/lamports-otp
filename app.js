@@ -8,7 +8,9 @@ const userRouter = require('./routes/user');
 const app = express();
 // TODO put secret in config
 app.use(session({
-    secret: 'otp-secret'
+    secret: 'otp-secret',
+    resave: true,
+    saveUninitialized: true
 }));
 app.use(express.json());
 app.use(cors());
