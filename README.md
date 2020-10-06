@@ -2,6 +2,8 @@
 
 This server is made to work with the lamports-otp client found in the [lamports-otp-client repository](https://github.com/picturestone/lamports-otp-client).
 
+The default user `root` with the password `root` is already available. The password is valid for 1000 logins. After that, the password must be changed. It can also be changed before. New passwords are always valid for howerver `PASSWORD_USES` is configured.
+
 ## Installation
 
 ### Prerequisits
